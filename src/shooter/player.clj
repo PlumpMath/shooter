@@ -26,15 +26,22 @@
       ;(update-in [:pos] move (:speed this))
       (update-in [:pos] wrap)))
 
-(defn check-move-dir [this world]
-  (if-let [player-dir (:player-dir world)]
-    (update-in this [:pos] move player-dir)
+(defn move-player-if [this pred dir]
+  (if pred
+    (update-in this [:pos] move dir)
     this))
+
+(defn keyboard-move [this pressed-keys]
+  (-> this
+      (move-player-if (:left pressed-keys) [-10 0])
+      (move-player-if (:right pressed-keys) [10 0])
+      (move-player-if (:up pressed-keys) [0 -10])
+      (move-player-if (:down pressed-keys) [0 10])))
 
 (defn update-player [this world]
   (-> this
       shooting
-      (check-move-dir world)
+      (keyboard-move (:keys world))
       moving))
 
 (defn draw-player [this]

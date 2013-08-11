@@ -12,7 +12,12 @@
   {:width width
    :height height
    :background-fn #(background-fn %)
-   :ents []})
+   :ents []
+   :state-fns #{}
+   :keys #{}})
+
+(defn add-state-fn [world f]
+  (update-in world [:state-fns] conj f))
 
 (defn add-entity [world entity]
   (update-in world [:ents] conj entity))
@@ -42,11 +47,18 @@
   (update-in world [:ents] (fn [ents]
                              (remove #(:dead %) ents))))
 
+(defn update-state-fns [world]
+  (let [state-fns (:state-fns world)]
+    (reduce #(%2 %1) world state-fns)))
+
+(defn draw [world]
+  ((:background-fn world) world)
+  (doseq [entity (:ents world)]
+    ((:draw-fn entity) entity)))
+
 (defn update-world [world]
   (-> world
+      update-state-fns
       (update-in [:ents] update-ents world)
       (ents-affect-world)
       (remove-dead)))
-
-(defn move-player [world dir]
-  (assoc world :player-dir dir))

@@ -1,5 +1,6 @@
 (ns shooter.shot
   (:require [shooter.entity :refer :all]
+            [shooter.utils :refer :all]
             [quil.core :refer :all]))
 
 (defn update-shot [this world]
@@ -20,4 +21,4 @@
                   :update-fn #(update-shot %1 %2)
                   :color [255 0 0]
                   :kind :shot
-                  :speed [10 0]}))
+                  :speed [(rand-range 15 25) 0]}))
