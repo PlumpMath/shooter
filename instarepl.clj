@@ -8,13 +8,14 @@
 
 (def world-atom (-main))
 
+
+
+;; Stats
 (count (:ents @world-atom))
-
 @world-atom
-
 (inspect (vec (:ents @world-atom)))
-(swap! world-atom clear-ents)
 
+;; Control
+(swap! world-atom clear-ents)
 (swap! world-atom add-entity (create-player 50 50))
 (swap! world-atom add-entity (create-enemy 300 150))
-

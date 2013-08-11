@@ -3,7 +3,7 @@
             [shooter.entity :refer [move]]
             [shooter.utils :refer :all]))
 
-(defn background-fn [world]
+(defn default-background-fn [world]
   (background (pulse 3.0 100 200)
               (pulse 0.9 100 100)
               (pulse 1.6 50  250)))
@@ -11,7 +11,7 @@
 (defn create-world [width height]
   {:width width
    :height height
-   :background-fn #(background-fn %)
+   :background-fn #(default-background-fn %)
    :ents []
    :state-fns #{}
    :keys #{}})
@@ -39,7 +39,7 @@
     (affect-fn world entity)
     world))
 
-(defn ents-affect-world [world]
+(defn make-ents-affect-world [world]
   (let [ents-coll (:ents world)]
     (reduce affect world ents-coll)))
 
@@ -60,5 +60,5 @@
   (-> world
       update-state-fns
       (update-in [:ents] update-ents world)
-      (ents-affect-world)
+      (make-ents-affect-world)
       (remove-dead)))
