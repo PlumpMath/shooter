@@ -1,5 +1,6 @@
 (ns shooter.world
   (:require [quil.core :refer :all]
+            [shooter.entity :refer [move]]
             [shooter.utils :refer :all]))
 
 (defn background-fn [world]
@@ -46,3 +47,6 @@
       (update-in [:ents] update-ents world)
       (ents-affect-world)
       (remove-dead)))
+
+(defn move-player [world dir]
+  (assoc world :player-dir dir))

@@ -13,10 +13,16 @@
   (inspect (vec (:ents @world-atom)))
   (count (:ents @world-atom))
   (swap! world-atom clear-ents)
+  (:player-dir @world-atom)
+  (swap! world-atom move-player [10 0])
   (swap! world-atom add-entity (create-enemy 300 150))
   (swap! world-atom add-entity (create-player 50 50))
   (swap! world-atom add-entity (create-shot 50 50))
   (count (get-ents-of-kind @world-atom :enemy))
+  (get-player-index @world-atom)
+  (swap! world-atom move-player [10 0])
+
+  (nth (get-in @world-atom [:ents]) 15)
   )
 
 

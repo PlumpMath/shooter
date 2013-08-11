@@ -1,9 +1,10 @@
 (ns shooter.core
-  (:require [quil.core :refer [defsketch background width height]]
+  (:require [quil.core :refer :all]
             [shooter.world :as world]
             [shooter.enemy :as enemy]
             [shooter.entity :as entity]
             [shooter.player :as player])
+  (:import [java.awt.event KeyEvent])
   (:gen-class))
 
 (defn setup []
@@ -21,11 +22,21 @@
   (doseq [entity (:ents @world-atom)]
     ((:draw-fn entity) entity)))
 
+(defn input [world-atom]
+  (println (str "key: "(key-code)))
+  (condp = (key-code)
+    KeyEvent/VK_RIGHT (swap! world-atom world/move-player [10 0])
+    KeyEvent/VK_LEFT  (swap! world-atom world/move-player [-10 0])
+    KeyEvent/VK_UP    (swap! world-atom world/move-player [0 -10])
+    KeyEvent/VK_DOWN  (swap! world-atom world/move-player [0 10])
+    (swap! world-atom world/move-player [0 0])))
+
 (defn create-window [world-atom]
   (let [sketch (defsketch demo
                  :title "Tiny Shooter"
                  :setup setup
                  :draw #(update-and-draw world-atom)
+                 :key-pressed #(input world-atom)
                  :size [(:width @world-atom) (:height @world-atom)])]
     (swap! world-atom assoc :sketch sketch)))
 

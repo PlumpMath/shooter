@@ -23,12 +23,18 @@
 
 (defn moving [this]
   (-> this
-      (update-in [:pos] move (:speed this))
+      ;(update-in [:pos] move (:speed this))
       (update-in [:pos] wrap)))
+
+(defn check-move-dir [this world]
+  (if-let [player-dir (:player-dir world)]
+    (update-in this [:pos] move player-dir)
+    this))
 
 (defn update-player [this world]
   (-> this
       shooting
+      (check-move-dir world)
       moving))
 
 (defn draw-player [this]
@@ -57,3 +63,4 @@
                   :shoot-timer 1.0
                   :shoot false
                   :speed [0 -3]}))
+
