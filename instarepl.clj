@@ -19,7 +19,4 @@
   (count (get-ents-of-kind @world-atom :enemy))
   )
 
-;(player-affect-world {:ents []} {:affect-fn #(player-affect-world %1 %2)})
-;@world-atom
 
-;(maybe-more-enemies @world-atom)
