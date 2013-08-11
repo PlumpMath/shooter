@@ -18,8 +18,22 @@
 
 (defn create-entity [settings]
   (merge {:pos [100 100]
+          :size [20 20]
           :color [255 255 255]
+          :kind :unknown
+          :dead false
           :draw-fn nil
           :update-fn nil}
          settings))
 
+(defn die [entity]
+  (assoc entity :dead true))
+
+(defn outside? [this]
+  (let [[x y] (:pos this)]
+    (or (< x 0) (< (width) x))))
+
+(defn die-if-outside [this]
+  (if (outside? this)
+    (die this)
+    this))
