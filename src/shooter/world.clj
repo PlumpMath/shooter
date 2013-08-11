@@ -4,9 +4,10 @@
             [shooter.utils :refer :all]))
 
 (defn default-background-fn [world]
-  (background (pulse 3.0 100 200)
-              (pulse 0.9 100 100)
-              (pulse 1.6 50  250)))
+  (when-not (-> world :keys :space)
+    (background (pulse 3.0 100 200)
+                (pulse 0.9 100 100)
+                (pulse 1.6 50  250))))
 
 (defn create-world [width height]
   {:width width
@@ -29,10 +30,19 @@
   (let [ents (:ents world)]
     (filter #(= kind (:kind %)) ents)))
 
-(defn update-ents [ents-coll world]
-  (for [entity ents-coll]
+(defn ents-updater [ents world]
+  (for [entity ents]
     (let [update-fn (:update-fn entity)]
       (update-fn entity world))))
+
+(defn update-ents [world]
+  (update-in world [:ents] ents-updater world))
+
+(defn ents-remover [ents]
+  (remove #(:dead %) ents))
+
+(defn remove-dead-ents [world]
+  (update-in world [:ents] ents-remover))
 
 (defn affect [world entity]
   (if-let [affect-fn (:affect-fn entity)]
@@ -42,10 +52,6 @@
 (defn make-ents-affect-world [world]
   (let [ents-coll (:ents world)]
     (reduce affect world ents-coll)))
-
-(defn remove-dead [world]
-  (update-in world [:ents] (fn [ents]
-                             (remove #(:dead %) ents))))
 
 (defn update-state-fns [world]
   (let [state-fns (:state-fns world)]
@@ -59,6 +65,6 @@
 (defn update-world [world]
   (-> world
       update-state-fns
-      (update-in [:ents] update-ents world)
-      (make-ents-affect-world)
-      (remove-dead)))
+      update-ents
+      remove-dead-ents
+      make-ents-affect-world))

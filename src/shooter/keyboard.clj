@@ -5,7 +5,8 @@
 (def keymap {KeyEvent/VK_RIGHT :right
              KeyEvent/VK_LEFT :left
              KeyEvent/VK_UP :up
-             KeyEvent/VK_DOWN :down})
+             KeyEvent/VK_DOWN :down
+             KeyEvent/VK_SPACE :space})
 
 (defn key-pressed [world-atom]
   (if-let [k (get keymap (key-code))]

@@ -11,6 +11,7 @@
 (defn setup [world-atom]
   (frame-rate 30)
   (swap! world-atom world/add-state-fn states/maybe-more-enemies)
+  (swap! world-atom world/add-state-fn states/start-menu)
   (swap! world-atom world/clear-ents)
   (swap! world-atom world/add-entity (player/create-player 50 50)))
 
