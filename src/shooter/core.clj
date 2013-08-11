@@ -17,7 +17,7 @@
 (defn update-and-draw [world-atom]
   (swap! world-atom maybe-more-enemies)
   (swap! world-atom world/update-world)
-  (apply background (:background @world-atom))
+  ((:background-fn @world-atom) @world-atom)
   (doseq [entity (:ents @world-atom)]
     ((:draw-fn entity) entity)))
 

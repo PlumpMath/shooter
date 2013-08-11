@@ -1,4 +1,5 @@
-(ns shooter.utils)
+(ns shooter.utils
+  (:require [quil.core :refer :all]))
 
 (defn rand-range [lower upper]
   (let [diff (- upper lower)]
@@ -9,3 +10,8 @@
        (< y1 (+ y2 h2))
        (< x2 (+ x1 w1))
        (< y2 (+ y1 h1))))
+
+(defn pulse [cycle-speed lower upper]
+  (+ lower
+     (* (- upper lower)
+        (sin (* (millis) 0.001 cycle-speed)))))

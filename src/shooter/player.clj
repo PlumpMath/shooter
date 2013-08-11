@@ -31,11 +31,14 @@
       shooting
       moving))
 
-(defn draw-player [enemy]
-  (let [[x y] (:pos enemy)
-        color (:color enemy)]
+(defn draw-player [this]
+  (let [[x y] (:pos this)
+        [w h] (:size this)
+        color (:color this)]
     (apply fill color)
-    (rect x y 40 20)))
+    (rect x y w h)
+    (apply fill (map (partial + 50) color))
+    (rect (+ x (* w 0.5)) y (* w 0.5) (* h 0.5))))
 
 (defn player-affect-world [world player]
   (if (= 1.0 (:shoot-timer player))
@@ -45,6 +48,7 @@
 
 (defn create-player [x y]
   (create-entity {:pos [x y]
+                  :size [80 50]
                   :draw-fn #(draw-player %)
                   :update-fn #(update-player %1 %2)
                   :affect-fn #(player-affect-world %1 %2)

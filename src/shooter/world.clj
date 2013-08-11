@@ -1,10 +1,16 @@
 (ns shooter.world
-  (:require [quil.core :refer :all]))
+  (:require [quil.core :refer :all]
+            [shooter.utils :refer :all]))
+
+(defn background-fn [world]
+  (background (pulse 3.0 100 200)
+              (pulse 0.9 100 100)
+              (pulse 1.6 50  250)))
 
 (defn create-world [width height]
   {:width width
    :height height
-   :background [25 80 100]
+   :background-fn #(background-fn %)
    :ents []})
 
 (defn add-entity [world entity]
