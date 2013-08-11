@@ -16,9 +16,10 @@
   (swap! world-atom add-entity (create-enemy 300 150))
   (swap! world-atom add-entity (create-player 50 50))
   (swap! world-atom add-entity (create-shot 50 50))
-  (swap! world-atom )
-  ;(sketch-close (:sketch @world-atom))
+  (count (get-ents-of-kind @world-atom :enemy))
   )
 
 ;(player-affect-world {:ents []} {:affect-fn #(player-affect-world %1 %2)})
+;@world-atom
 
+;(maybe-more-enemies @world-atom)

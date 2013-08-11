@@ -1,5 +1,6 @@
 (ns shooter.enemy
   (:require [shooter.entity :refer :all]
+            [shooter.world :refer :all]
             [quil.core :refer :all]))
 
 (defn rand-range [lower upper]
@@ -12,14 +13,10 @@
        (< x2 (+ x1 w1))
        (< y2 (+ y1 h1))))
 
-(defn get-shots [world]
-  (let [ents (:ents world)]
-    (filter #(= :shot (:kind %)) ents)))
-
 (defn hit? [this world]
   (let [pos (:pos this)
         size (:size this)
-        shots (get-shots world)]
+        shots (get-ents-of-kind world :shot)]
     (not (empty? (filter (fn [shot]
                            (intersect? pos size (:pos shot) (:size shot)))
                          shots)))))
@@ -29,7 +26,7 @@
        :size [20 1]}
       {:ents [{:kind :shot
                :pos [10 20]
-               :size [20 9]}]})
+               :size [20 19]}]})
 
 (defn die-if-hit-by-shot [this world]
   (if (hit? this world)
@@ -40,19 +37,26 @@
   (-> enemy
       (die-if-hit-by-shot world)
       (update-in [:pos] move (:speed enemy))
-      (update-in [:pos] wrap)))
+      die-if-outside
+      ;(update-in [:pos] wrap)
+      ))
 
 (defn draw-enemy [enemy]
   (let [[x y] (:pos enemy)
         [w h] (:size enemy)
         color (:color enemy)]
+    (stroke 0)
     (apply fill color)
-    (rect x y w h)))
+    (ellipse x y w h)
+    (fill 255 255 255)
+    (ellipse x (- y 10) (* 0.6 w) h)))
 
 (defn create-enemy [x y]
   (create-entity {:pos [x y]
+                  :size [50 20]
                   :draw-fn #(draw-enemy %)
                   :update-fn #(update-enemy %1 %2)
-                  :color [255 100 50]
-                  :speed [-5 (rand-range -2.0 2.0)]}))
+                  :color [255 (rand 255) 50]
+                  :kind :enemy
+                  :speed [(rand-range -10 -5) (rand-range -2.0 2.0)]}))
 

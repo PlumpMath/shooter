@@ -1,8 +1,10 @@
 (ns shooter.world
   (:require [quil.core :refer :all]))
 
-(defn create-world []
-  {:background [25 80 100]
+(defn create-world [width height]
+  {:width width
+   :height height
+   :background [25 80 100]
    :ents []})
 
 (defn add-entity [world entity]
@@ -10,6 +12,10 @@
 
 (defn clear-ents [world]
   (assoc world :ents []))
+
+(defn get-ents-of-kind [world kind]
+  (let [ents (:ents world)]
+    (filter #(= kind (:kind %)) ents)))
 
 (defn update-ents [ents-coll world]
   (for [entity ents-coll]
@@ -33,6 +39,4 @@
   (-> world
       (update-in [:ents] update-ents world)
       (ents-affect-world)
-      (remove-dead)
-      )
-  )
+      (remove-dead)))
